@@ -2,10 +2,13 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.time.*;
+import java.text.*;
 import java.nio.charset.StandardCharsets;
+import java.math.*;
 
 /*
- * Runs the Bot given a specified server, port, nick, user, and channel. Implements IRC commands such as JOIN, NICK, USER, PRIVMSG, 
+ * Runs the Bot given a specified server, port, nick, user, and channel.
+ * Implements IRC commands such as JOIN, NICK, USER, PRIVMSG, TOPIC, NAMES,  
  * 
  * @author Harry Pinkerton
  *
@@ -13,15 +16,14 @@ import java.nio.charset.StandardCharsets;
  */
 public class BotClient {
   
-  private BotCommands BotCmd;
   private BufferedWriter bwriter;
   private Socket socket;
-  private String server   = "selsey.nsqdc.city.ac.uk";
+  private String server   = "card.freenode.net";
   private final int port;
-  private String nick = "RudeBot";
-  private String user = "RudeBot 0 * :RudeBot";
+  private String nick = "PythonBot";
+  private String user = "PythonBot 0 * :PythonBot";
   private String channel  = "#Cheers";
-  private String botOutput  = "I am now connected";
+  private String botOutput  = "I am on a Quest For the Holy Grail";
   private String userInput; 
 
   /**
@@ -67,15 +69,35 @@ public class BotClient {
   
   
   /**
-     * Returns the current time
-     * @returns 
+     * Returns the current time and date 
+     * @returns strDate - a string of the current time and date.
      */
   
-  public void getTime(){
-    Date date=java.util.Calendar.getInstance().getTime();
-    System.out.println(date);
+  public String getTime(){
+    Date date = Calendar.getInstance().getTime();  
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+    String strDate = dateFormat.format(date);
+    return strDate;
   }
     
+  public String getInsult(){
+   // create a list of String type 
+        String[] strArray = new String[5]; 
+        // add 5 element in strArray
+        strArray[0] = "You smell"; 
+        strArray[1] = "You are ugly"; 
+        strArray[2] = "Go away or I will taunt you a second time."; 
+        strArray[3] = "I fart in your general direction"; 
+        strArray[4] = "Your mother was a hamster, and your father smelt of elderberries"; 
+        
+        Random r=new Random();
+        int randomNumber=r.nextInt(strArray.length);
+        
+        String strchosen = strArray[randomNumber];
+        return strchosen;
+  }
+  
+
     
     /**
      * Prints the length of the packet recieved using ??'s and spaces.
@@ -97,16 +119,12 @@ public class BotClient {
   
   
   
-  
-  
   public void run() throws IOException, InterruptedException{
       
       System.out.println("BotClient connecting to " + server + ": " + port);
       
       // Initialize socket and Botcommand objects
       Socket socket = new Socket(server,port);
-      
-      getTime();
       
       
        // Use the input and output stream directly
@@ -159,42 +177,29 @@ public class BotClient {
 	    //printHexLine(packet);
       
       String str1 = new String(packet);
+      System.out.println(str1);
  
  
- 
-      //List of Commands the Bot can perform while running. 
-      if (str1.contains("!tellthetime")) {
-        sendMsg(bwriter,"PRIVMSG "+channel+" :"+ "The time is ___");
+      //List of Commands the Bot can perform while running.
+      
+      //!time command
+      if (str1.contains("PRIVMSG "+ channel+ " :!time")) {
+        sendMsg(bwriter,"PRIVMSG "+channel+" :"+ "The time is " + getTime());
         bwriter.flush();
         }
       
-      if (str1.contains("!insultme")) {
-        sendMsg(bwriter,"PRIVMSG "+channel+" :"+ "You're ugly");
+      //!insult command
+      if (str1.contains("PRIVMSG "+ channel+ " :!insult")) {
+        sendMsg(bwriter,"PRIVMSG "+channel+" :"+ getInsult());
         bwriter.flush();
         }
       
-      if (str1.contains("!help")) {
-        sendMsg(bwriter,"PRIVMSG "+channel+" :"+ "I would but I am pretty busy right now");
+
+      if (str1.contains("PRIVMSG "+ channel+ " :!names")) {
+        sendMsg(bwriter,"NAMES "+ channel);
         bwriter.flush();
         }
-        
-      if (str1.contains("!commands")) {
-        sendMsg(bwriter,"PRIVMSG "+channel+" :"+ "I would but I am pretty busy right now");
-        bwriter.flush();
-        }
-      
-      if (str1.contains("!quit")) {
-        sendMsg(bwriter, "QUIT : I never wanna see you again");
-        bwriter.flush();
-        }
-      
-      if (str1.contains("PING")) {
-        sendMsg(bwriter, "QUIT : I never wanna see you again");
-        bwriter.flush();
-        }  
-     
   
-      
     }
     
   }
