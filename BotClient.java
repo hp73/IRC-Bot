@@ -8,7 +8,7 @@ import java.math.*;
 
 /*
  * Runs the Bot given a specified server, port, nick, user, and channel.
- * Implements IRC commands such as JOIN, NICK, USER, PRIVMSG, TOPIC, NAMES,  
+ * Implements IRC commands such as JOIN, NICK, USER, PRIVMSG, TOPIC, KICK, RESTART, REHASH
  * 
  * @author Harry Pinkerton
  *
@@ -27,7 +27,7 @@ public class BotClient {
   private String userInput; 
 
   /**
-     * Initialise a new client. To run the client, call run().
+     * Initialise a new client. To run the client, call run(). Taken from Binary Client Practical.
      * @param port the port number to connect to
      */
   
@@ -100,7 +100,7 @@ public class BotClient {
 
     
     /**
-     * Prints the length of the packet recieved using ??'s and spaces.
+     * Prints the length of the packet recieved using ??'s and spaces. Taken from Binary CLient Practical.
      * @param packet[] - array in which the byte stream is stored
      */
     
@@ -133,7 +133,6 @@ public class BotClient {
       
       
       // Open OutputStreamWriter to write to a channel
-      System.out.println("Opened OutPutStreamWriter.");
       OutputStreamWriter outputStreamWriter = new OutputStreamWriter(output);
       
       System.out.println("Opened BufferedWriter.");
@@ -141,10 +140,8 @@ public class BotClient {
      
 
      //Open InputStreamWriter to take commands from the user
-      System.out.println("Opened InPutStreamReader");
       InputStreamReader inputStreamReader = new InputStreamReader(input);
-      
-      System.out.println("Opened BufferedReader.");
+
       BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
       PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -156,7 +153,7 @@ public class BotClient {
       sendMsg(bwriter,"USER "+ user);
       sendMsg(bwriter,"JOIN "+channel);
       sendMsg(bwriter,"PRIVMSG "+channel+" :"+ botOutput);
-      sendMsg(bwriter, "TOPIC " + channel+" :" + "I run this town now");
+      sendMsg(bwriter, "TOPIC " + channel+" :" + "I'm on a Quest");
       bwriter.flush();
      
        
@@ -194,19 +191,38 @@ public class BotClient {
         bwriter.flush();
         }
       
-
-      if (str1.contains("PRIVMSG "+ channel+ " :!names")) {
-        sendMsg(bwriter,"NAMES "+ channel);
+      // !greetings command
+      if (str1.contains("PRIVMSG "+ channel+ " :!greetings")) {
+        sendMsg(bwriter,"PRIVMSG "+channel+" :"+ "Why hello there");
         bwriter.flush();
         }
-  
+        
+      // !goaway command
+      if (str1.contains("PRIVMSG "+ channel+ " :!goaway")) {
+        sendMsg(bwriter,"KICK " + channel + " " + nick + " :Rude but okay" );
+        bwriter.flush();
+        }
+        
+      // !rehash command
+      if (str1.contains("PRIVMSG "+ channel+ " :!rehash")) {
+        sendMsg(bwriter,"REHASH" );
+        bwriter.flush();
+        }
+        
+        // !restart command
+      if (str1.contains("PRIVMSG "+ channel+ " :!restart")) {
+        sendMsg(bwriter,"RESTART" );
+        bwriter.flush();
+        }
+
     }
     
   }
 
   /**
-     * @param args the command line arguments
-     */
+   * Main taken from binary client Practical.
+    * @param args the command line arguments
+    */
   public static void main(String args[]) throws IOException, InterruptedException {
     
     String usage = "Usage: java BotClient [<port-number>] ";
