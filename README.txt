@@ -2,6 +2,7 @@ Final Project - IRC Bot
 IN2011 Winter 2020
 By Harry Pinkerton
 Required to run: JDK 14.01.1 and an IRC server to connect the bot to
+*Compile and run BotClient.java to connect the bot to the IRC server*
 
 ===Features===
 - Can Connect to a user specified IP address and port number
