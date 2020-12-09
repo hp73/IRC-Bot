@@ -1,4 +1,11 @@
-# IRC-Bot
-Final Project for IN 2011 -  creates a java bot that is able to connect Final Project for IN 2011 -  
-Creates a java bot that can connect to an IRC server at a user-selected IP address and port number. The bot is also able to join a user selected channel, and interact with the
-users on that channel
+Final Project - IRC Bot
+IN2011 Winter 2020
+By Harry Pinkerton
+Required to run: JDK 14.01.1 and an IRC server to connect the bot to
+
+===Features===
+- Can Connect to a user specified IP address and port number
+- Able to retrieve time and date for the user
+- Able to greet the user
+- Able to Disconnect from the channel without closing the program
+- Able to change the topic of the channel upon joining
